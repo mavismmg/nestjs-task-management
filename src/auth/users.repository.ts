@@ -3,6 +3,7 @@ import { EntityRepository, Repository } from "typeorm";
 import { UsersErrorCode } from "./auth-error-code.enum";
 import { AuthCredentialsDto } from "./dto/auth-credentials.dto";
 import { User } from "./user.entity";
+import * as bcrypt from "bcrypt";
 
 class UsersRepositoryErrorHandling {
   public exceptionUserAlreadyExists(errorCode: string): void {
@@ -17,14 +18,16 @@ class UsersRepositoryErrorHandling {
 
 @EntityRepository(User)
 export class UsersRepository extends Repository<User> {
-  exceptionErrorGenerated = new UsersRepositoryErrorHandling();
+  usersRepositoryErrorHandling = new UsersRepositoryErrorHandling();
   async createUser(authCredentialsDto: AuthCredentialsDto): Promise<void> {
     const { username, password } = authCredentialsDto;
-    const user = this.create({ username, password })
+    const salt = await bcrypt.genSalt();
+    const hashedPassword = await bcrypt.hash(password, salt);
+    const user = this.create({ username, password: hashedPassword })
     try {
       await this.save(user);
     } catch (error) {
-      this.exceptionErrorGenerated.exceptionUserAlreadyExists(error.code);
+      this.usersRepositoryErrorHandling.exceptionUserAlreadyExists(error.code);
     }
   }
 }
