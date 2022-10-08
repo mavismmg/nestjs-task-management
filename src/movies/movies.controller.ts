@@ -8,7 +8,7 @@ import { UpdateMovieStatusDto } from "./dto/update-movie-status.dto";
 import { UpdateMovieTypeDto } from "./dto/update-movie-type.dto";
 
 @Controller('movie')
-//@UseGuards(AuthGuard())
+@UseGuards(AuthGuard())
 export class MoviesController {
   constructor(private moviesService: MoviesService) { }
 
@@ -48,6 +48,7 @@ export class MoviesController {
   @Patch('/:id/episode')
   async updateMovieEpisode(@Param('id') id: string, @Body() episode: number): Promise<Movie> {
     return this.moviesService.updateMovieEpisode(id, episode);
+    // TODO(fix): rout is not updating episode, type error with the ORM. 
   }
 
   @Delete('/:id')
