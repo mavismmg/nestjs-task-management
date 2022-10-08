@@ -1,9 +1,12 @@
-import { IsNotEmpty, IsOptional } from "class-validator";
+import { Type } from "class-transformer";
+import { IsInt, IsNotEmpty, IsOptional } from "class-validator";
 
 export class CreateMovieDto {
   @IsNotEmpty()
   title: string;
 
   @IsOptional()
-  episode: string;
+  //@IsInt()
+  @Type(() => Number)
+  episode: number;
 }

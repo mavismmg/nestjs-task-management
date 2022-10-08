@@ -7,7 +7,7 @@ export class Movie {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
+  @Column({ unique: true })
   title: string;
 
   @Column()
@@ -17,5 +17,5 @@ export class Movie {
   status: MovieStatus;
 
   @Column()
-  episode: string;
+  episode: number;
 }
