@@ -3,10 +3,12 @@ import { TasksModule } from './tasks/tasks.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { MoviesModule } from './movies/movies.module';
 import { AuthModule } from './auth/auth.module';
+import { TasksPriorityModule } from './tasks-priority/tasks-priority.module';
 
 @Module({
   imports: [
     TasksModule,
+    TasksPriorityModule,
     MoviesModule,
     TypeOrmModule.forRoot({
       type: 'postgres',
