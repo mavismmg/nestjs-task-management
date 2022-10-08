@@ -1,4 +1,5 @@
 import { ConflictException, InternalServerErrorException } from "@nestjs/common";
+import { User } from "src/auth/user.entity";
 import { EntityRepository, Repository } from "typeorm";
 import { CreateMovieDto } from "./dto/create-movie.dto";
 import { GetMoviesFilterDto } from "./dto/get-movies-filter.dto";
@@ -22,9 +23,10 @@ class MoviesRepositoryErrorHandling {
 export class MoviesRepository extends Repository<Movie> {
   moviesRepositoryErrorHandling = new MoviesRepositoryErrorHandling();
 
-  async getMovies(filterDto: GetMoviesFilterDto): Promise<Movie[]> {
+  async getMovies(filterDto: GetMoviesFilterDto, user: User): Promise<Movie[]> {
     const { status, search, type } = filterDto;
     const query = this.createQueryBuilder('movie');
+    query.where({ user });
     if (status) {
       query.andWhere('movie.status = :status', { status });
     }
@@ -33,7 +35,7 @@ export class MoviesRepository extends Repository<Movie> {
     }
     if (search) {
       query.andWhere(
-        'LOWER(movie.title) LIKE LOWER(:search)',
+        '(LOWER(movie.title) LIKE LOWER(:search))',
         { search: `%${search}%` },
       );
     }
@@ -41,13 +43,14 @@ export class MoviesRepository extends Repository<Movie> {
     return movies;
   }
 
-  async createMovie(createMovieDto: CreateMovieDto): Promise<Movie> {
+  async createMovie(createMovieDto: CreateMovieDto, user: User): Promise<Movie> {
     const { title, episode } = createMovieDto;
     const movie = this.create({
       title,
       type: MovieTypes.MOVIE,
       status: MovieStatus.WATCHING,
       episode,
+      user,
     });
     try {
       await this.save(movie);

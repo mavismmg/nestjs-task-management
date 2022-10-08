@@ -1,4 +1,6 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Exclude } from "class-transformer";
+import { User } from "src/auth/user.entity";
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { MovieStatus } from "./movie-status.enum";
 import { MovieTypes } from "./movie-type.enum";
 
@@ -18,4 +20,8 @@ export class Movie {
 
   @Column()
   episode: number;
+
+  @ManyToOne((_type) => User, (user) => user.movies, { eager: false })
+  @Exclude({ toPlainOnly: true })
+  user: User;
 }

@@ -1,3 +1,4 @@
+import { Movie } from "src/movies/movies.entity";
 import { Task } from "src/tasks/task.entity";
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
@@ -14,4 +15,7 @@ export class User {
 
   @OneToMany((_type) => Task, (task) => task.user, { eager: true })
   tasks: Task[];
+
+  @OneToMany((_type) => Movie, (movie) => movie.user, { eager: true })
+  movies: Movie[];
 }
