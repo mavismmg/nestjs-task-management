@@ -1,5 +1,5 @@
-import { Movie } from "src/movies/movies.entity";
-import { Task } from "src/tasks/task.entity";
+import { Movie } from "../movies/movies.entity";
+import { Task } from "../tasks/task.entity";
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()

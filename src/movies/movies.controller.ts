@@ -6,8 +6,8 @@ import { AuthGuard } from '@nestjs/passport';
 import { GetMoviesFilterDto } from "./dto/get-movies-filter.dto";
 import { UpdateMovieStatusDto } from "./dto/update-movie-status.dto";
 import { UpdateMovieTypeDto } from "./dto/update-movie-type.dto";
-import { GetUser } from "src/auth/get-user.decorator";
-import { User } from "src/auth/user.entity";
+import { GetUser } from "../auth/get-user.decorator";
+import { User } from "../auth/user.entity";
 
 @Controller('movie')
 @UseGuards(AuthGuard())

@@ -1,5 +1,5 @@
 import { ConflictException, InternalServerErrorException } from "@nestjs/common";
-import { User } from "src/auth/user.entity";
+import { User } from "../auth/user.entity";
 import { EntityRepository, Repository } from "typeorm";
 import { CreateMovieDto } from "./dto/create-movie.dto";
 import { GetMoviesFilterDto } from "./dto/get-movies-filter.dto";
