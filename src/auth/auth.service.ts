@@ -5,9 +5,12 @@ import { UsersRepository } from './users.repository';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { JwtPayload } from './jwt-payload.interface';
+import { Logger } from '@nestjs/common';
 
 @Injectable()
 export class AuthService {
+  private logger = new Logger('AuthService', true);
+
   constructor(
     @InjectRepository(UsersRepository)
     private usersRepository: UsersRepository,
@@ -30,6 +33,7 @@ export class AuthService {
       const accessToken: string = await this.jwtService.sign(payload);
       return { accessToken };
     } else {
+      this.logger.error(`Failed to log in. User: "${user.username}"`);
       throw new UnauthorizedException('Please check your login credentials')
     }
   }

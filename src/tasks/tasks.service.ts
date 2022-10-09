@@ -6,6 +6,7 @@ import { TasksRepository } from './tasks.repository';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Task } from './task.entity';
 import { User } from 'src/auth/user.entity';
+import { TaskPriority } from 'src/tasks-priority/task-priority.entity';
 
 @Injectable()
 export class TasksService {
@@ -14,15 +15,16 @@ export class TasksService {
     private tasksRepository: TasksRepository,
   ) { }
 
-  getTasks(filterDto: GetTasksFilterDto, user: User): Promise<Task[]> {
-    return this.tasksRepository.getTasks(filterDto, user);
+  getTasks(filterDto: GetTasksFilterDto, user: User, taskPriority: TaskPriority): Promise<Task[]> {
+    return this.tasksRepository.getTasks(filterDto, user, taskPriority);
   }
 
-  async getTaskById(id: string, user: User): Promise<Task> {
+  async getTaskById(id: string, user: User, taskPriority: TaskPriority): Promise<Task> {
     const found = await this.tasksRepository.findOne({
       where: {
         id: id,
         user: user,
+        taskPriority: taskPriority,
       },
     });
     if (!found) {
@@ -31,19 +33,19 @@ export class TasksService {
     return found;
   }
 
-  createTask(createTaskDto: CreateTaskDto, user: User): Promise<Task> {
-    return this.tasksRepository.createTask(createTaskDto, user);
+  createTask(createTaskDto: CreateTaskDto, user: User, taskPriority: TaskPriority): Promise<Task> {
+    return this.tasksRepository.createTask(createTaskDto, user, taskPriority);
   }
 
-  async updateTaskStatus(id: string, status: TaskStatus, user: User): Promise<Task> {
-    const task = await this.getTaskById(id, user);
+  async updateTaskStatus(id: string, status: TaskStatus, user: User, taskPriority: TaskPriority): Promise<Task> {
+    const task = await this.getTaskById(id, user, taskPriority);
     task.status = status;
     await this.tasksRepository.save(task);
     return task;
   }
 
-  async deleteTask(id: string, user: User): Promise<void> {
-    const found = await this.tasksRepository.delete({ id, user });
+  async deleteTask(id: string, user: User, taskPriority: TaskPriority): Promise<void> {
+    const found = await this.tasksRepository.delete({ id, user, taskPriority });
     if (found.affected === 0) {
       throw new NotFoundException(`Task with ID "${id}" not found`);
     }
