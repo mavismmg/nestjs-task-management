@@ -17,28 +17,41 @@ import { TasksService } from './tasks.service';
 import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from 'src/auth/get-user.decorator';
 import { User } from 'src/auth/user.entity';
+import { GetTaskPriority } from 'src/tasks-priority/get-task-priority.decorator';
+import { TaskPriority } from 'src/tasks-priority/task-priority.entity';
+import { Logger } from '@nestjs/common';
 
 @Controller('tasks')
 @UseGuards(AuthGuard())
 export class TasksController {
+  private logger = new Logger('TasksController');
+
   constructor(private tasksService: TasksService) { }
 
   @Get()
-  getTasks(@Query() filterDto: GetTasksFilterDto, @GetUser() user: User): Promise<Task[]> {
-    return this.tasksService.getTasks(filterDto, user);
+  getTasks(
+    @Query() filterDto: GetTasksFilterDto,
+    @GetUser() user: User,
+    @GetTaskPriority() taskPriority: TaskPriority,
+  ): Promise<Task[]> {
+    this.logger.verbose(`User "${user.username}" retrieving all tasks. Filters: "${JSON.stringify(filterDto)}"`);
+    return this.tasksService.getTasks(filterDto, user, taskPriority);
   }
 
   @Get('/:id')
-  async getTaskById(@Param('id') id: string, @GetUser() user: User): Promise<Task> {
-    return this.tasksService.getTaskById(id, user);
+  async getTaskById(@Param('id') id: string, @GetUser() user: User, @GetTaskPriority() taskPriority: TaskPriority): Promise<Task> {
+    this.logger.verbose(`User "${user.username}" getting task by id. Task id: "${id}`);
+    return this.tasksService.getTaskById(id, user, taskPriority);
   }
 
   @Post()
   public createTask(
     @Body() createTaskDto: CreateTaskDto,
     @GetUser() user: User,
+    @GetTaskPriority() taskPriority: TaskPriority,
   ): Promise<Task> {
-    return this.tasksService.createTask(createTaskDto, user);
+    this.logger.verbose(`User "${user.username}" creating a new task. Data: ${JSON.stringify(createTaskDto)}`);
+    return this.tasksService.createTask(createTaskDto, user, taskPriority);
   }
 
   @Patch('/:id/status')
@@ -46,13 +59,16 @@ export class TasksController {
     @Param('id') id: string,
     @Body() updateTaskStatusDto: UpdateTaskStatusDto,
     @GetUser() user: User,
+    @GetTaskPriority() taskPriority: TaskPriority,
   ): Promise<Task> {
     const { status } = updateTaskStatusDto;
-    return this.tasksService.updateTaskStatus(id, status, user);
+    this.logger.verbose(`User "${user.username}" patch a task. Data: ${JSON.stringify(updateTaskStatusDto)}`);
+    return this.tasksService.updateTaskStatus(id, status, user, taskPriority);
   }
 
   @Delete('/:id')
-  async deleteTask(@Param('id') id: string, @GetUser() user: User): Promise<void> {
-    return this.tasksService.deleteTask(id, user);
+  async deleteTask(@Param('id') id: string, @GetUser() user: User, @GetTaskPriority() taskPriority: TaskPriority): Promise<void> {
+    this.logger.verbose(`Deleting a task from user "${user.username}"`);
+    return this.tasksService.deleteTask(id, user, taskPriority);
   }
 }
