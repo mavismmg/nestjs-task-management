@@ -32,26 +32,24 @@ export class TasksController {
   getTasks(
     @Query() filterDto: GetTasksFilterDto,
     @GetUser() user: User,
-    @GetTaskPriority() taskPriority: TaskPriority,
   ): Promise<Task[]> {
     this.logger.verbose(`User "${user.username}" retrieving all tasks. Filters: "${JSON.stringify(filterDto)}"`);
-    return this.tasksService.getTasks(filterDto, user, taskPriority);
+    return this.tasksService.getTasks(filterDto, user);
   }
 
   @Get('/:id')
-  async getTaskById(@Param('id') id: string, @GetUser() user: User, @GetTaskPriority() taskPriority: TaskPriority): Promise<Task> {
+  async getTaskById(@Param('id') id: string, @GetUser() user: User): Promise<Task> {
     this.logger.verbose(`User "${user.username}" getting task by id. Task id: "${id}`);
-    return this.tasksService.getTaskById(id, user, taskPriority);
+    return this.tasksService.getTaskById(id, user);
   }
 
   @Post()
   public createTask(
     @Body() createTaskDto: CreateTaskDto,
     @GetUser() user: User,
-    @GetTaskPriority() taskPriority: TaskPriority,
   ): Promise<Task> {
     this.logger.verbose(`User "${user.username}" creating a new task. Data: ${JSON.stringify(createTaskDto)}`);
-    return this.tasksService.createTask(createTaskDto, user, taskPriority);
+    return this.tasksService.createTask(createTaskDto, user);
   }
 
   @Patch('/:id/status')
@@ -59,16 +57,15 @@ export class TasksController {
     @Param('id') id: string,
     @Body() updateTaskStatusDto: UpdateTaskStatusDto,
     @GetUser() user: User,
-    @GetTaskPriority() taskPriority: TaskPriority,
   ): Promise<Task> {
     const { status } = updateTaskStatusDto;
     this.logger.verbose(`User "${user.username}" patch a task. Data: ${JSON.stringify(updateTaskStatusDto)}`);
-    return this.tasksService.updateTaskStatus(id, status, user, taskPriority);
+    return this.tasksService.updateTaskStatus(id, status, user);
   }
 
   @Delete('/:id')
-  async deleteTask(@Param('id') id: string, @GetUser() user: User, @GetTaskPriority() taskPriority: TaskPriority): Promise<void> {
+  async deleteTask(@Param('id') id: string, @GetUser() user: User): Promise<void> {
     this.logger.verbose(`Deleting a task from user "${user.username}"`);
-    return this.tasksService.deleteTask(id, user, taskPriority);
+    return this.tasksService.deleteTask(id, user);
   }
 }

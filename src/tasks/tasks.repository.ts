@@ -11,7 +11,7 @@ import { InternalServerErrorException, Logger } from '@nestjs/common';
 export class TasksRepository extends Repository<Task> {
   private logger = new Logger('TasksRepository', true);
 
-  async getTasks(filterDto: GetTasksFilterDto, user: User, taskPriority: TaskPriority): Promise<Task[]> {
+  async getTasks(filterDto: GetTasksFilterDto, user: User): Promise<Task[]> {
     const { status, search } = filterDto;
     const query = this.createQueryBuilder('task');
     query.where({ user });
@@ -38,7 +38,7 @@ export class TasksRepository extends Repository<Task> {
     }
   }
 
-  async createTask(createTaskDto: CreateTaskDto, user: User, taskPriority: TaskPriority): Promise<Task> {
+  async createTask(createTaskDto: CreateTaskDto, user: User): Promise<Task> {
     const { title, description } = createTaskDto;
     this.logger.warn('About to create a task.');
     const task = this.create({
@@ -46,7 +46,6 @@ export class TasksRepository extends Repository<Task> {
       description,
       status: TaskStatus.OPEN,
       user,
-      taskPriority,
     });
 
     try {
