@@ -1,5 +1,5 @@
 import { Task } from "src/tasks/task.entity";
-import { Column, CreateDateColumn, Entity, JoinColumn, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Check, Column, CreateDateColumn, Entity, JoinColumn, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { TaskPriorityLevel } from "./task-priority-level.enum";
 
 @Entity()
@@ -17,6 +17,5 @@ export class TaskPriority {
   updated_at: Date;
 
   @OneToMany((_type) => Task, (task) => task.taskPriority, { eager: true })
-  @JoinColumn()
   tasks: Task[];
 }
