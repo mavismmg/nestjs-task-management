@@ -1,8 +1,8 @@
 import { Exclude } from 'class-transformer';
 import { User } from '../auth/user.entity';
-import { TaskPriority } from '../tasks-priority/task-priority.entity';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { TaskStatus } from './task-status.enum';
+import { TaskPriority } from './task-priority.enum';
 
 @Entity()
 export class Task {
@@ -18,10 +18,10 @@ export class Task {
   @Column()
   status: TaskStatus;
 
+  @Column()
+  priority: TaskPriority;
+
   @ManyToOne((_type) => User, (user) => user.tasks, { eager: false })
   @Exclude({ toPlainOnly: true })
   user: User;
-
-  @ManyToOne((_type) => TaskPriority, (taskPriority) => taskPriority.tasks, { eager: false })
-  taskPriority: TaskPriority;
 }

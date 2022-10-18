@@ -17,8 +17,6 @@ import { TasksService } from './tasks.service';
 import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from '../auth/get-user.decorator';
 import { User } from '../auth/user.entity';
-import { GetTaskPriority } from '../tasks-priority/get-task-priority.decorator';
-import { TaskPriority } from '../tasks-priority/task-priority.entity';
 import { Logger } from '@nestjs/common';
 
 @Controller('tasks')

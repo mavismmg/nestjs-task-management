@@ -1,4 +1,5 @@
 import { IsEnum, IsOptional, IsString } from 'class-validator';
+import { TaskPriority } from '../task-priority.enum';
 import { TaskStatus } from '../task-status.enum';
 
 export class GetTasksFilterDto {
@@ -9,4 +10,8 @@ export class GetTasksFilterDto {
   @IsOptional()
   @IsString()
   search?: string;
+
+  @IsOptional()
+  @IsEnum(TaskPriority)
+  priority?: TaskPriority;
 }
