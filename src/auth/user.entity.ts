@@ -1,4 +1,4 @@
-import { Movie } from "../movies/movies.entity";
+import { Movie } from "../watching/movies/movies.entity";
 import { Task } from "../tasks/task.entity";
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 

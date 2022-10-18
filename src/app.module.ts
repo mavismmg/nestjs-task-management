@@ -1,11 +1,14 @@
 import { Module } from '@nestjs/common';
 import { TasksModule } from './tasks/tasks.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { MoviesModule } from './movies/movies.module';
+import { MoviesModule } from './watching/movies/movies.module';
 import { AuthModule } from './auth/auth.module';
-import { TasksPriorityModule } from './tasks-priority/tasks-priority.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { configValidationSchema } from './config.schema';
+import { TvshowsService } from './watching/tvshows/tvshows.service';
+import { TvshowsController } from './watching/tvshows/tvshows.controller';
+import { TvshowsModule } from './watching/tvshows/tvshows.module';
+import { WatchingModule } from './watching/watching.module';
 
 @Module({
   imports: [
@@ -14,8 +17,9 @@ import { configValidationSchema } from './config.schema';
       validationSchema: configValidationSchema,
     }),
     TasksModule,
-    TasksPriorityModule,
     MoviesModule,
+    TvshowsModule,
+    WatchingModule,
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
